@@ -1,72 +1,90 @@
-import React from 'react';
+import React, { useState } from 'react';
+import image1 from '../../assets/image/image1.jpg';
+import image2 from '../../assets/image/image2.jpg';
+import image3 from '../../assets/image/image3.jpg';
+import image4 from '../../assets/image/image4.jpg';
 
-// TypeScript 타입 선언
-interface TitleProps {
-  number: number;
-}
+// 슬라이드 사진 데이터
+const slideImages = [
+  { id: 1, title: '1번 사진', imageUrl: image1 },
+  { id: 2, title: '2번 사진', imageUrl: image2 },
+  { id: 3, title: '3번 사진', imageUrl: image3 },
+  { id: 4, title: '4번 사진', imageUrl: image4 },
+];
 
-interface IconButtonProps {
-  icon: string;
-}
-
-// HomePage 컴포넌트
 export default function HomePage() {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const handleSlideClick = (index: number) => {
+    setActiveSlide(index);
+  };
+
+  const handleLargeImageClick = () => {
+    // 이벤트 페이지로 이동하는 로직 (큰 이미지 클릭 시)
+    console.log('이벤트 페이지로 이동');
+  };
+
   return (
-    <div className="w-full">
-      {/* Main Event Section */}
-      <div className="bg-pink-100 h-64 mb-16 flex items-center justify-center text-xl font-semibold text-gray-700 relative w-full">
-        <span>1번 이벤트 & 사진</span>
-        
-        {/* Game Start Button */}
-        <button className="bg-yellow-500 text-white text-xl font-bold w-40 h-40 rounded-full shadow-lg absolute left-1/2 transform -translate-x-1/2 -bottom-14 translate-y-1/2 z-20">
+    <div className="w-full flex flex-col items-center">
+      {/* 큰 슬라이드 이미지 섹션 */}
+      <div className="relative w-full max-w-screen-lg h-[450px] bg-pink-200 flex justify-center items-center">
+        <img 
+          src={slideImages[activeSlide].imageUrl} 
+          alt={slideImages[activeSlide].title} 
+          className="object-cover w-full h-full"
+          onClick={handleLargeImageClick}
+        />
+      </div>
+
+      {/* 슬라이드 카드 + Game Start 버튼 섹션 */}
+      <div className="relative flex justify-center items-center -mt-6 space-x-6">
+        {/* 왼쪽 슬라이드 카드 */}
+        {slideImages.slice(0, 2).map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`w-40 h-24 flex items-center justify-center rounded-md cursor-pointer ${index === activeSlide ? 'bg-pink-400' : 'bg-pink-300'}`}
+            onClick={() => handleSlideClick(index)}
+          >
+            <img 
+              src={slide.imageUrl} 
+              alt={slide.title} 
+              className="object-cover w-full h-full rounded-md"
+            />
+          </div>
+        ))}
+
+        {/* Game Start 버튼 */}
+        <button className="bg-yellow-500 text-white text-2xl font-bold w-48 h-48 rounded-full shadow-lg">
           Game Start
         </button>
-      </div>
 
-      {/* Titles Section */}
-      <div className="relative flex justify-between items-end mb-4 space-x-4 -mt-10">
-        <Title number={1} />
-        <Title number={2} />
-        <Title number={3} />
-        <Title number={4} />
-      </div>
-
-      {/* Login Section */}
-      <div className="flex justify-end">
-        <div className="flex flex-col items-end space-y-2">
-          <button className="bg-black text-white px-4 py-2 rounded mb-2">
-            홈 페이지 로그인
-          </button>
-          <div className="flex space-x-2">
-            <IconButton icon="facebook" />
-            <IconButton icon="google" />
-            <IconButton icon="naver" />
-            <IconButton icon="kakao" />
+        {/* 오른쪽 슬라이드 카드 */}
+        {slideImages.slice(2, 4).map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`w-40 h-24 flex items-center justify-center rounded-md cursor-pointer ${index + 2 === activeSlide ? 'bg-pink-400' : 'bg-pink-300'}`}
+            onClick={() => handleSlideClick(index + 2)}
+          >
+            <img 
+              src={slide.imageUrl} 
+              alt={slide.title} 
+              className="object-cover w-full h-full rounded-md"
+            />
           </div>
+        ))}
+      </div>
+
+      {/* 로그인 섹션 */}
+      <div className="flex justify-center space-x-4 mt-10">
+        <button className="bg-black text-white px-6 py-2 rounded">
+          홈페이지 로그인
+        </button>
+        <div className="flex space-x-2">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded">F</button>
+          <button className="bg-red-600 text-white px-4 py-2 rounded">G</button>
+          <button className="bg-green-600 text-white px-4 py-2 rounded">N</button>
         </div>
       </div>
     </div>
-  );
-}
-
-// Title 컴포넌트
-function Title({ number }: TitleProps) {
-  return (
-    <div className="bg-pink-100 h-20 flex-grow mx-2 flex flex-col items-center justify-center text-sm text-gray-600">
-      <span>{number}번 사진</span>
-    </div>
-  );
-}
-
-// IconButton 컴포넌트
-function IconButton({ icon }: IconButtonProps) {
-  return (
-    <button className="bg-white rounded-full p-2 shadow-lg">
-      <img
-        src={`/${icon}.svg`} // You'll need to have these SVG files in your public folder or modify the path accordingly
-        alt={`${icon} icon`}
-        className="w-6 h-6"
-      />
-    </button>
   );
 }
